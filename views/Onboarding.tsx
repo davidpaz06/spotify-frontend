@@ -20,31 +20,30 @@ const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
       console.log("Registration successful!");
       onComplete();
     } catch (error) {
-      console.error("Registration error:", error);
+      console.error("Onboarding - Registration error:", error);
     }
   };
 
   const formFields = [
     {
-      name: "firstName",
-      label: "First Name",
-      placeholder: "Enter your name",
+      name: "username",
+      label: "Username",
+      placeholder: "Enter your username",
+      autoCapitalize: "none" as const,
       required: true,
     },
     {
-      name: "email",
-      label: "Email",
-      placeholder: "Enter your email",
-      keyboardType: "email-address" as const,
+      name: "password",
+      label: "Password",
+      placeholder: "Enter your password",
+      secureTextEntry: true,
       autoCapitalize: "none" as const,
       required: true,
     },
   ];
 
   return (
-    <SafeAreaView>
-      <Text>Hola</Text>
-
+    <SafeAreaView style={styles.container}>
       <Form
         fields={formFields}
         formData={formData || {}}
@@ -53,6 +52,7 @@ const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
         containerStyle={styles.formContainer}
         labelStyle={styles.label}
         inputStyle={styles.input}
+        placeholderTextColor="gray"
         buttonStyle={styles.button}
         buttonTextStyle={styles.buttonText}
         buttonLabel="Continue"
@@ -62,13 +62,21 @@ const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 16,
+    backgroundColor: "#1c1c1c",
+  },
+
   formContainer: {
     padding: 16,
-    backgroundColor: "#fff",
+    backgroundColor: "transparent",
   },
   label: {
     fontSize: 16,
     marginBottom: 8,
+    color: "#fff",
   },
   input: {
     borderWidth: 1,
@@ -76,6 +84,10 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     padding: 8,
     marginBottom: 16,
+    color: "#fff",
+  },
+  placeholder: {
+    color: "#fff",
   },
   button: {
     backgroundColor: "#007BFF",

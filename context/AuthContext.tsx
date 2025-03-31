@@ -18,23 +18,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleRegister = async (form: { [key: string]: string }) => {
     const { username, password } = form;
     try {
-      const response = await axios.post("https://localhost:3000/user/create", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "http://192.168.0.195:3000/user/create",
+        {
+          username,
+          password,
+        }
+      );
       setUser(response.data);
     } catch (error) {
-      console.error("Error during signup:", error);
+      console.error("Auth context - Error during signup:", error);
       throw error;
     }
   };
 
   const handleLogin = async (username: string, password: string) => {
     try {
-      const response = await axios.post("https://localhost:3000/user/login", {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "http://192.168.0.195:3000/user/login",
+        {
+          username,
+          password,
+        }
+      );
       console.log("Login response:", response.data);
       //   setUser(response.data);
     } catch (error) {

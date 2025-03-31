@@ -8,7 +8,6 @@ import { ParamListBase } from "@react-navigation/native";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Onboarding from "./views/Onboarding";
 import Home from "./views/Home";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface RootStackParamList extends ParamListBase {
   Onboarding: undefined;
@@ -16,7 +15,17 @@ export interface RootStackParamList extends ParamListBase {
 }
 
 const App: FC = () => {
-  const { user } = useAuth();
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      if (isLoggedIn) {
+        return;
+      }
+      // Simulate an API call to check login status
+    };
+
+    checkLoginStatus();
+  }, []);
+
   const Stack = createStackNavigator<RootStackParamList>();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -25,31 +34,28 @@ const App: FC = () => {
     null
   );
 
-  useEffect(() => {
-    const checkOnboardingStatus = async () => {};
-    checkOnboardingStatus();
-  }, []);
-
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Onboarding"
-          component={(props: any) => (
-            <Onboarding {...props} onComplete={setIsLoggedIn(true)} />
-          )}
-          options={{ headerShown: false }}
-        />
+    <AuthProvider>
+      <NavigationContainer>
+        {isLoggedIn ? (
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Home"
+              component={Home}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        ) : (
+          <Onboarding
+            onComplete={() => {
+              setIsLoggedIn(true);
+            }}
+          />
+        )}
 
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-
-      <StatusBar style="auto" />
-    </NavigationContainer>
+        <StatusBar style="auto" />
+      </NavigationContainer>
+    </AuthProvider>
   );
 };
 
@@ -61,3 +67,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default App;

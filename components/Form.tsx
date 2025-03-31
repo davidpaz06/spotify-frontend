@@ -30,6 +30,7 @@ interface FormProps {
   containerStyle?: object;
   labelStyle?: object;
   inputStyle?: object;
+  placeholderTextColor?: string;
   buttonStyle?: object;
   buttonTextStyle?: object;
   buttonLabel?: string;
@@ -43,6 +44,7 @@ const Form: FC<FormProps> = ({
   containerStyle,
   labelStyle,
   inputStyle,
+  placeholderTextColor,
   buttonStyle,
   buttonTextStyle,
 }: FormProps) => {
@@ -72,6 +74,7 @@ const Form: FC<FormProps> = ({
             <Text style={[styles.label, labelStyle]}>{field.label}</Text>
             <TextInput
               placeholder={field.placeholder}
+              placeholderTextColor={placeholderTextColor}
               secureTextEntry={field.secureTextEntry}
               keyboardType={field.keyboardType}
               autoCapitalize={field.autoCapitalize}
