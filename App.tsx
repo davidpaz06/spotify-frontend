@@ -39,11 +39,9 @@ const App: FC = () => {
       <NavigationContainer>
         {isLoggedIn ? (
           <Stack.Navigator>
-            <Stack.Screen
-              name="Home"
-              component={Home}
-              options={{ headerShown: false }}
-            />
+            <Stack.Screen name="Home" options={{ headerShown: false }}>
+              {() => <Home setIsLoggedIn={setIsLoggedIn} />}
+            </Stack.Screen>
           </Stack.Navigator>
         ) : (
           <Onboarding

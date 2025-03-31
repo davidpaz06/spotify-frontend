@@ -25,6 +25,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           password,
         }
       );
+      console.log("Register response:", response.data);
       setUser(response.data);
     } catch (error) {
       console.error("Auth context - Error during signup:", error);
@@ -42,12 +43,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       );
       console.log("Login response:", response.data);
-      //   setUser(response.data);
+      setUser(response.data);
     } catch (error) {
       console.error("Error during login:", error);
       throw error;
     }
-    setUser({ username });
   };
 
   const logout = async () => {

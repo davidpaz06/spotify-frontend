@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Pressable } from "react-native";
 import { FC, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import Form from "../components/Form";
@@ -8,6 +8,11 @@ interface OnboardingProps {
 }
 
 const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
+  const [isRegistering, setIsRegistering] = useState<[boolean, string]>([
+    true,
+    "Register",
+  ]);
+  const { handleLogin } = useAuth();
   const { handleRegister } = useAuth();
   const [formData, setFormData] = useState<{ [key: string]: string } | null>(
     null
@@ -16,8 +21,11 @@ const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
   const handleFormSubmit = async (formData: { [key: string]: string }) => {
     console.log("Form Data:", formData);
     try {
-      await handleRegister(formData);
-      console.log("Registration successful!");
+      if (isRegistering[0]) {
+        await handleRegister(formData);
+      } else if (!isRegistering[0]) {
+        await handleLogin(formData.username, formData.password);
+      }
       onComplete();
     } catch (error) {
       console.error("Onboarding - Registration error:", error);
@@ -57,6 +65,24 @@ const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
         buttonTextStyle={styles.buttonText}
         buttonLabel="Continue"
       />
+      <View style={{ height: 16 }} />
+      <Text style={styles.label}>{isRegistering[1]} </Text>
+      <View style={{ height: 16 }} />
+      <Pressable
+        onPress={() =>
+          setIsRegistering([
+            !isRegistering[0],
+            isRegistering[1] === "Register" ? "Login" : "Register",
+          ])
+        }
+        style={styles.button}
+      >
+        <Text style={{ color: "#fff" }}>
+          {isRegistering[0]
+            ? "Already have an account? Log in"
+            : "First time here? Sign up"}
+        </Text>
+      </Pressable>
     </SafeAreaView>
   );
 };
