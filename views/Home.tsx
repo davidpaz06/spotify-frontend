@@ -1,7 +1,8 @@
 import { FC, useEffect } from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
+import axios from "axios";
 
 interface HomeProps {
   setIsLoggedIn: (isLoggedIn: boolean) => void;
@@ -36,6 +37,29 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
         }}
       >
         <Text style={styles.buttonText}>Log Out</Text>
+      </Pressable>
+
+      <Pressable
+        style={styles.button}
+        onPress={async () => {
+          try {
+            const response = await axios.get<any>(
+              "http://192.168.0.195:3000/artist/Avenged%20Sevenfold",
+              {
+                headers: {
+                  authorization: `Bearer ${user.accessToken}`,
+                  spotifyauthorization: `Bearer ${user.spotifyAccessToken}`,
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+            console.log(response.data);
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+        }}
+      >
+        <Text>Bruno Mars</Text>
       </Pressable>
     </SafeAreaView>
   );

@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 interface AuthContextType {
@@ -44,6 +45,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       );
       console.log("Login response:", response.data);
       setUser(response.data);
+      await AsyncStorage.setItem("user", JSON.stringify(response.data));
     } catch (error) {
       console.error("Error during login:", error);
       throw error;
@@ -52,6 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = async () => {
     setUser(null);
+    await AsyncStorage.removeItem("user");
   };
 
   return (

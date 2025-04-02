@@ -6,6 +6,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Onboarding from "./views/Onboarding";
 import Home from "./views/Home";
 
@@ -15,24 +16,37 @@ export interface RootStackParamList extends ParamListBase {
 }
 
 const App: FC = () => {
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      if (isLoggedIn) {
-        return;
-      }
-      // Simulate an API call to check login status
-    };
-
-    checkLoginStatus();
-  }, []);
-
   const Stack = createStackNavigator<RootStackParamList>();
-
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userData, setUserData] = useState<{ [key: string]: string } | null>(
     null
   );
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const storedUser = await AsyncStorage.getItem("user");
+        if (storedUser) {
+          setUserData(JSON.parse(storedUser));
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        console.error("Error loading user from AsyncStorage:", error);
+      }
+      setIsLoading(false);
+    };
+
+    checkLoginStatus();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#007BFF" />
+      </View>
+    );
+  }
 
   return (
     <AuthProvider>
