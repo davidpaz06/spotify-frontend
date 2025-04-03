@@ -20,7 +20,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const { username, password } = form;
     try {
       const response = await axios.post(
-        "http://192.168.0.195:3000/user/create",
+        "http://192.168.1.132:3000/user/create",
         {
           username,
           password,
@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleLogin = async (username: string, password: string) => {
     try {
       const response = await axios.post(
-        "http://192.168.0.195:3000/user/login",
+        "http://192.168.1.132:3000/user/login",
         {
           username,
           password,
@@ -46,6 +46,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       console.log("Login response:", response.data);
       setUser(response.data);
       await AsyncStorage.setItem("user", JSON.stringify(response.data));
+      await AsyncStorage.setItem("username", username);
     } catch (error) {
       console.error("Error during login:", error);
       throw error;
@@ -55,6 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = async () => {
     setUser(null);
     await AsyncStorage.removeItem("user");
+    await AsyncStorage.removeItem("username");
   };
 
   return (
