@@ -10,22 +10,18 @@ interface HomeProps {
   setIsLoggedIn: (isLoggedIn: boolean) => void;
 }
 
-async function fetchData(user: any) {}
-
 const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
-  const { user, logout } = useAuth();
+  const { user, logout, setUser } = useAuth();
   const [username, setUsername] = useState<string | null>(null);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
 
   const playPreview = async (previewUrl: string) => {
     try {
-      // Detener cualquier sonido que esté reproduciéndose
       if (sound) {
         await sound.unloadAsync();
         setSound(null);
       }
 
-      // Cargar y reproducir el nuevo sonido
       const { sound: newSound } = await Audio.Sound.createAsync(
         { uri: previewUrl },
         { shouldPlay: true }
@@ -38,7 +34,6 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
 
   useEffect(() => {
     return () => {
-      // Limpiar el sonido cuando el componente se desmonte
       if (sound) {
         sound.unloadAsync();
       }
@@ -46,18 +41,31 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
   }, [sound]);
 
   useEffect(() => {
-    const fetchUsername = async () => {
+    const fetchStoredUser = async () => {
       try {
-        const storedUsername = await AsyncStorage.getItem("username");
-        if (storedUsername) {
-          setUsername(storedUsername);
-        }
+        const [storedUserString, storedUsername] = await Promise.all([
+          AsyncStorage.getItem("user"),
+          AsyncStorage.getItem("username"),
+        ]);
+
+        const storedUser = {
+          user: storedUserString ? JSON.parse(storedUserString) : null,
+          username: storedUsername || null,
+        };
+
+        setUsername(storedUser.username);
+        setUser(storedUser.user);
+
+        console.log("Stored User:", storedUser.user.accessToken);
       } catch (error) {
-        console.error("Error loading username from AsyncStorage:", error);
+        console.error(
+          "Error loading user and username from AsyncStorage:",
+          error
+        );
       }
     };
 
-    fetchUsername();
+    fetchStoredUser();
   }, []);
 
   return (
@@ -89,9 +97,10 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
       <Pressable
         style={styles.button}
         onPress={async () => {
+          console.log("User:", user);
           try {
             const response = await axios.get<any>(
-              "http://192.168.1.132:3000/artist/Yorghaki",
+              "http://192.168.0.195:3000/artist/Yorghaki",
               {
                 headers: {
                   authorization: `Bearer ${user.accessToken}`,
@@ -114,7 +123,7 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
         onPress={async () => {
           try {
             const response = await axios.get<any>(
-              "http://192.168.1.132:3000/track/Not%20Like%20Us",
+              "http://192.168.0.195:3000/track/Not%20Like%20Us",
               {
                 headers: {
                   authorization: `Bearer ${user.accessToken}`,
@@ -123,9 +132,7 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
                 },
               }
             );
-            console.log(response.data);
             const track = response.data[0];
-            console.log(track);
             await playPreview(track.preview);
           } catch (error) {
             console.error("Error fetching data:", error);

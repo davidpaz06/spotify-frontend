@@ -7,6 +7,7 @@ interface AuthContextType {
   handleRegister: (form: { [key: string]: string }) => Promise<void>;
   handleLogin: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  setUser: React.Dispatch<React.SetStateAction<any>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,7 +21,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const { username, password } = form;
     try {
       const response = await axios.post(
-        "http://192.168.1.132:3000/user/create",
+        "http://192.168.0.195:3000/user/create",
         {
           username,
           password,
@@ -37,7 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleLogin = async (username: string, password: string) => {
     try {
       const response = await axios.post(
-        "http://192.168.1.132:3000/user/login",
+        "http://192.168.0.195:3000/user/login",
         {
           username,
           password,
@@ -60,7 +61,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <AuthContext.Provider value={{ user, handleRegister, handleLogin, logout }}>
+    <AuthContext.Provider
+      value={{ user, handleRegister, handleLogin, logout, setUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
