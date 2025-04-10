@@ -1,14 +1,13 @@
 import { FC, useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ParamListBase } from "@react-navigation/native";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Onboarding from "./views/Onboarding";
-import Home from "./views/Home";
+import Onboarding from "./app/Onboarding";
+import Home from "./app/Home";
 
 export interface RootStackParamList extends ParamListBase {
   Onboarding: undefined;

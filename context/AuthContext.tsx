@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { API_ROUTES } from "../apiConfig";
 
 interface AuthContextType {
   user: any;
@@ -20,13 +21,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleRegister = async (form: { [key: string]: string }) => {
     const { username, password } = form;
     try {
-      const response = await axios.post(
-        "http://192.168.0.195:3000/user/create",
-        {
-          username,
-          password,
-        }
-      );
+      const response = await axios.post(API_ROUTES.REGISTER, {
+        username,
+        password,
+      });
       console.log("Register response:", response.data);
       setUser(response.data);
     } catch (error) {
@@ -37,13 +35,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const handleLogin = async (username: string, password: string) => {
     try {
-      const response = await axios.post(
-        "http://192.168.0.195:3000/user/login",
-        {
-          username,
-          password,
-        }
-      );
+      const response = await axios.post(API_ROUTES.LOGIN, {
+        username,
+        password,
+      });
       console.log("Login response:", response.data);
       setUser(response.data);
       await AsyncStorage.setItem("user", JSON.stringify(response.data));

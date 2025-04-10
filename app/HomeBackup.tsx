@@ -69,7 +69,7 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <>
       <Text style={styles.title}>
         Welcome, {username ? username : "Guest"}!
       </Text>
@@ -141,7 +141,7 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
       >
         <Text style={styles.buttonText}>Get song</Text>
       </Pressable>
-    </SafeAreaView>
+    </>
   );
 };
 

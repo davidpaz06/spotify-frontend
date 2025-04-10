@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View, SafeAreaView, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, Image } from "react-native";
 import { FC, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import Background from "../components/Background";
 import Form from "../components/Form";
 
 interface OnboardingProps {
@@ -9,8 +10,8 @@ interface OnboardingProps {
 
 const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
   const [isRegistering, setIsRegistering] = useState<[boolean, string]>([
-    true,
-    "Register",
+    false,
+    "Login",
   ]);
   const { handleLogin } = useAuth();
   const { handleRegister } = useAuth();
@@ -51,23 +52,23 @@ const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <Image
+        source={require("../assets/images/onboarding-logo.png")}
+        style={{ alignSelf: "center" }}
+      />
       <Form
         fields={formFields}
         formData={formData || {}}
         setFormData={setFormData}
         onSubmit={handleFormSubmit}
-        containerStyle={styles.formContainer}
         labelStyle={styles.label}
         inputStyle={styles.input}
-        placeholderTextColor="gray"
         buttonStyle={styles.button}
         buttonTextStyle={styles.buttonText}
-        buttonLabel="Continue"
+        buttonLabel={isRegistering[0] ? "Register" : "Login"}
       />
-      <View style={{ height: 16 }} />
       <Text style={styles.label}>{isRegistering[1]} </Text>
-      <View style={{ height: 16 }} />
       <Pressable
         onPress={() =>
           setIsRegistering([
@@ -77,13 +78,13 @@ const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
         }
         style={styles.button}
       >
-        <Text style={{ color: "#fff" }}>
+        <Text style={styles.redirect}>
           {isRegistering[0]
             ? "Already have an account? Log in"
             : "First time here? Sign up"}
         </Text>
       </Pressable>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -91,18 +92,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: 16,
-    backgroundColor: "#1c1c1c",
+    backgroundColor: "#161616",
   },
-
   formContainer: {
-    padding: 16,
+    width: "100%",
     backgroundColor: "transparent",
   },
   label: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: "#fff",
+    display: "none",
   },
   input: {
     borderWidth: 1,
@@ -120,6 +117,13 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 4,
     alignItems: "center",
+  },
+  redirect: {
+    position: "absolute",
+    color: "#fff",
+    fontSize: 16,
+    textAlign: "center",
+    bottom: 16,
   },
   buttonText: {
     color: "#fff",

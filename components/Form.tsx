@@ -5,11 +5,10 @@ import {
   TextInput,
   Pressable,
   Text,
-  KeyboardAvoidingView,
-  ScrollView,
-  Platform,
   Alert,
 } from "react-native";
+import Background from "./Background";
+import StatusBar from "./StatusBar";
 
 interface FormField {
   name: string;
@@ -47,6 +46,7 @@ const Form: FC<FormProps> = ({
   placeholderTextColor,
   buttonStyle,
   buttonTextStyle,
+  buttonLabel = "Submit",
 }: FormProps) => {
   const handleChange = (name: string, value: string) => {
     setFormData({ ...formData, [name]: value });
@@ -63,12 +63,9 @@ const Form: FC<FormProps> = ({
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={[styles.container, containerStyle]}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <>
+      <StatusBar backgroundColor="#1A1A1A" />
+      <View style={styles.formContainer}>
         {fields.map((field) => (
           <View key={field.name} style={styles.fieldContainer}>
             <Text style={[styles.label, labelStyle]}>{field.label}</Text>
@@ -85,49 +82,31 @@ const Form: FC<FormProps> = ({
           </View>
         ))}
         <Pressable style={[styles.button, buttonStyle]} onPress={handleSubmit}>
-          <Text style={[styles.buttonText, buttonTextStyle]}>Submit</Text>
+          <Text style={[styles.buttonText, buttonTextStyle]}>
+            {buttonLabel}
+          </Text>
         </Pressable>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  formContainer: {
     width: "100%",
+    padding: 20,
+    backgroundColor: "transparent",
   },
-  scrollContainer: {
-    alignItems: "center",
-    padding: 16,
-  },
-  fieldContainer: {
-    marginBottom: 20,
-  },
+  fieldContainer: {},
   label: {
     fontSize: 16,
-    marginBottom: 8,
-    textAlign: "center",
   },
   input: {
     height: 40,
-    width: 200,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 8,
   },
-  button: {
-    backgroundColor: "#f4ce14",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 8,
-    alignItems: "center",
-  },
+  button: {},
   buttonText: {
-    color: "#000",
     fontSize: 16,
-    fontWeight: "bold",
   },
 });
 
