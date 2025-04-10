@@ -12,7 +12,7 @@ import StatusBar from "./StatusBar";
 
 interface FormField {
   name: string;
-  label: string;
+  label?: string;
   placeholder: string;
   value?: string;
   secureTextEntry?: boolean;
