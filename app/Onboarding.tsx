@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View, Pressable, Image } from "react-native";
+import { StyleSheet, Text, Pressable, Image } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { FC, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import Background from "../components/Background";
@@ -36,14 +37,12 @@ const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
   const formFields = [
     {
       name: "username",
-      // label: "Username",
       placeholder: "Enter your username",
       autoCapitalize: "none" as const,
       required: true,
     },
     {
       name: "password",
-      // label: "Password",
       placeholder: "Enter your password",
       secureTextEntry: true,
       autoCapitalize: "none" as const,
@@ -52,13 +51,16 @@ const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
   ];
 
   return (
-    <View style={styles.container}>
+    <KeyboardAwareScrollView
+      contentContainerStyle={styles.container}
+      enableOnAndroid={true}
+      extraScrollHeight={20}
+      keyboardOpeningTime={0}
+    >
       <Image
         source={require("../assets/images/onboarding-logo.png")}
         style={{
           alignSelf: "center",
-          width: 200,
-          height: 200,
         }}
       />
       <Form
@@ -88,7 +90,7 @@ const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
             : "First time here? Sign up"}
         </Text>
       </Pressable>
-    </View>
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -97,6 +99,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     backgroundColor: "#1A1A1A",
+    padding: 20,
   },
 
   formContainer: {
@@ -123,7 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center",
     height: 50,
-    width: "75%",
+    width: "60%",
     marginTop: 25,
   },
 
