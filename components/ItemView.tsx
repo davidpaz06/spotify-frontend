@@ -1,24 +1,26 @@
-import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { View, Text, Image, StyleSheet, ActivityIndicator } from "react-native";
 import { useFonts } from "expo-font";
 
 interface ItemViewProps {
   data: {
-    track: string; // Nombre del track
-    url: string; // URL de la imagen
-    artist: string; // Nombre del artista
+    track: string;
+    url: string;
+    artist: string;
   };
-  viewType?: "one" | "two" | "three"; // Tipos de vista (opcional)
+  viewType?: "one" | "two" | "three";
 }
 
 const ItemView: React.FC<ItemViewProps> = ({ data, viewType = "one" }) => {
   const { track = "Unknown Track", url = "", artist = "Unknown Artist" } = data;
+  const [isLoading, setIsLoading] = useState(true); // Estado para manejar el loader
 
   const [fontsLoaded] = useFonts({
     FigtreeRegular: require("../assets/fonts/Figtree-Regular.ttf"),
     FigtreeMedium: require("../assets/fonts/Figtree-Medium.ttf"),
     FigtreeBold: require("../assets/fonts/Figtree-Bold.ttf"),
   });
+
   if (!fontsLoaded) {
     return null;
   }
@@ -38,10 +40,16 @@ const ItemView: React.FC<ItemViewProps> = ({ data, viewType = "one" }) => {
 
   return (
     <View style={containerStyle}>
-      <Image
-        source={{ uri: url || "https://via.placeholder.com/150" }}
-        style={imageStyle}
-      />
+      <View style={styles.imageWrapper}>
+        {isLoading && (
+          <ActivityIndicator style={styles.loader} size="small" color="#FFF" />
+        )}
+        <Image
+          source={{ uri: url || "https://via.placeholder.com/150" }}
+          style={[imageStyle, { opacity: isLoading ? 0 : 1 }]} // Usa opacity en lugar de display
+          onLoadEnd={() => setIsLoading(false)} // Cambia el estado cuando la imagen termina de cargarse
+        />
+      </View>
       {viewType === "three" ? (
         <View style={styles.wrapperThree}>
           <Text style={trackStyle} numberOfLines={1} ellipsizeMode="tail">
@@ -154,6 +162,17 @@ const styles = StyleSheet.create({
     fontFamily: "FigtreeRegular",
     color: "#909090",
     fontSize: 12,
+  },
+
+  // ---------------- Loader ------------------
+  imageWrapper: {
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+  },
+  loader: {
+    position: "absolute",
+    zIndex: 1,
   },
 });
 

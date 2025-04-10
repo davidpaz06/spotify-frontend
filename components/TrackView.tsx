@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { useFonts } from "expo-font";
-import usePlayer from "../hook/usePlayer";
+import usePlayer from "../hooks/usePlayer";
 
 interface TrackViewProps {}
 

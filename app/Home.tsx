@@ -2,7 +2,7 @@ import { StyleSheet, Text, Pressable } from "react-native";
 import { useAuth } from "../context/AuthContext";
 import { FC, useEffect, useState } from "react";
 import data from "../assets/data.json";
-import usePlayer from "../hook/usePlayer"; // Importa el hook
+import usePlayer from "../hooks/usePlayer"; // Importa el hook
 
 import Background from "../components/Background";
 import StatusBar from "../components/StatusBar";
@@ -24,28 +24,26 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
     <Background>
       <StatusBar backgroundColor="#1A1A1A" />
       <Header title="Home" backgroundColor="#1A1A1A" />
-      <Filter options={["Song", "Album", "Artist"]} />
 
-      {/* <Title text="Albums" />
+      <Title text="Albums" />
       <ItemList data={data} viewType="one" />
       <Title text="Playlists" />
       <ItemList data={data} viewType="two" />
       <Title text="Recent" />
       <ItemList data={data} viewType="three" />
-      
-      <TrackView />
-      
+
       <Pressable
-      style={styles.button}
-      onPress={() => {
-        logout()
-        .then(() => setIsLoggedIn(false))
+        style={styles.button}
+        onPress={() => {
+          logout()
+            .then(() => setIsLoggedIn(false))
             .catch((error) => console.error("Error logging out:", error));
-            }}
-            >
+        }}
+      >
         <Text style={styles.buttonText}>Log Out</Text>
-        </Pressable> */}
-      <TrackView />
+      </Pressable>
+
+      {/* <TrackView /> */}
     </Background>
   );
 };

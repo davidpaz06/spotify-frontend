@@ -1,33 +1,24 @@
 import { FC, useState, useEffect } from "react";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
+import { StyleSheet, View, ActivityIndicator } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { ParamListBase } from "@react-navigation/native";
-import { AuthProvider, useAuth } from "./context/AuthContext";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Ionicons } from "@expo/vector-icons"; // Importa los íconos
+import { AuthProvider } from "./context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Onboarding from "./app/Onboarding";
 import Home from "./app/Home";
-
-export interface RootStackParamList extends ParamListBase {
-  Onboarding: undefined;
-  Home: undefined;
-}
+import HomeBackup from "./app/HomeBackup";
 
 const App: FC = () => {
-  const Stack = createStackNavigator<RootStackParamList>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const Tab = createBottomTabNavigator();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userData, setUserData] = useState<{ [key: string]: string } | null>(
-    null
-  );
 
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
         const storedUser = await AsyncStorage.getItem("user");
         if (storedUser) {
-          setUserData(JSON.parse(storedUser));
           setIsLoggedIn(true);
         }
       } catch (error) {
@@ -51,11 +42,34 @@ const App: FC = () => {
     <AuthProvider>
       <NavigationContainer>
         {isLoggedIn ? (
-          <Stack.Navigator>
-            <Stack.Screen name="Home" options={{ headerShown: false }}>
+          <Tab.Navigator
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ color, size }) => {
+                let iconName: "home-outline" | "settings-outline" =
+                  "home-outline";
+
+                if (route.name === "Home") {
+                  iconName = "home-outline";
+                } else if (route.name === "HomeBackup") {
+                  iconName = "settings-outline";
+                }
+
+                return <Ionicons name={iconName} size={size} color={color} />;
+              },
+              tabBarActiveTintColor: "#1DB954", // Color del ícono activo
+              tabBarInactiveTintColor: "#909090", // Color del ícono inactivo
+              tabBarStyle: {
+                backgroundColor: "#1A1A1A", // Color de fondo del tabBar
+              },
+            })}
+          >
+            <Tab.Screen name="Home" options={{ headerShown: false }}>
               {() => <Home setIsLoggedIn={setIsLoggedIn} />}
-            </Stack.Screen>
-          </Stack.Navigator>
+            </Tab.Screen>
+            <Tab.Screen name="HomeBackup" options={{ headerShown: false }}>
+              {() => <HomeBackup setIsLoggedIn={setIsLoggedIn} />}
+            </Tab.Screen>
+          </Tab.Navigator>
         ) : (
           <Onboarding
             onComplete={() => {
@@ -63,8 +77,6 @@ const App: FC = () => {
             }}
           />
         )}
-
-        <StatusBar style="auto" />
       </NavigationContainer>
     </AuthProvider>
   );

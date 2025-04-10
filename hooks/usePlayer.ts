@@ -16,6 +16,10 @@ const usePlayer = (): UsePlayerReturn => {
 
   const play = async (url: string) => {
     try {
+      if (!url) {
+        throw new Error("No preview URL available");
+      }
+
       if (sound) {
         await sound.unloadAsync(); // Descarga el sonido anterior si existe
       }
