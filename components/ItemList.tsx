@@ -9,9 +9,13 @@ interface ItemListProps {
     artist: string;
   }[]; // Array de objetos
   viewType: "one" | "two" | "three"; // Tipo de vista
+  limit?: number; // Límite de elementos a mostrar (opcional)
 }
 
-const ItemList: React.FC<ItemListProps> = ({ data, viewType }) => {
+const ItemList: React.FC<ItemListProps> = ({ data, viewType, limit }) => {
+  // Limitar los datos si se proporciona un límite
+  const limitedData = limit ? data.slice(0, limit) : data;
+
   return (
     <View
       style={[
@@ -19,7 +23,7 @@ const ItemList: React.FC<ItemListProps> = ({ data, viewType }) => {
         styles[`container${capitalize(viewType)}` as keyof typeof styles],
       ]}
     >
-      {data.map((item, index) => (
+      {limitedData.map((item, index) => (
         <ItemView key={index} data={item} viewType={viewType} />
       ))}
     </View>

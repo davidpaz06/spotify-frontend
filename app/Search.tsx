@@ -8,9 +8,10 @@ import Background from "../components/Background";
 import StatusBar from "../components/StatusBar";
 import Header from "../components/Header";
 import ItemList from "../components/ItemList";
-import TrackView from "../components/TrackView";
-import LogoutButton from "../components/LogoutButton";
+import Filter from "../components/Filter";
 import Title from "../components/Title";
+import LogoutButton from "../components/LogoutButton";
+import TrackView from "../components/TrackView";
 
 interface HomeProps {
   setIsLoggedIn: (isLoggedIn: boolean) => void;
@@ -24,17 +25,14 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
     <Background>
       <StatusBar backgroundColor="#1A1A1A" />
       <Header title="Home" backgroundColor="#1A1A1A" />
+      <Filter options={["Song", "Album", "Artist"]} />
 
-      <Title text="Albums" />
+      <Title text="Recomendations" />
       <ItemList data={data} viewType="one" />
-      <Title text="Playlists" />
-      <ItemList data={data} viewType="two" />
-      <Title text="Recent" />
-      <ItemList data={data} viewType="three" limit={2} />
 
       <LogoutButton onLogout={() => setIsLoggedIn(false)} />
 
-      {/* <TrackView /> */}
+      <TrackView />
     </Background>
   );
 };

@@ -20,30 +20,36 @@ const TrackView: React.FC<TrackViewProps> = ({}) => {
 
   return (
     <Pressable style={styles.container} onPress={() => {}}>
-      <Text style={styles.temporal}>Song</Text>
+      <Image
+        source={require("../assets/images/onboarding-logo.png")}
+        style={styles.trackViewImg}
+      />
     </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
-    alignSelf: "center",
-    bottom: 90,
-    width: "100%",
-    height: 60,
-    padding: 0,
-    marginHorizontal: 10,
     zIndex: 3,
-    backgroundColor: "red",
-    borderRadius: 5,
-    alignItems: "center",
+    position: "absolute",
+    bottom: 10,
+    width: "95%",
+    height: 60,
+    alignSelf: "center",
+    backgroundColor: "#252525",
+    borderRadius: 15,
+    padding: 5,
   },
   temporal: {
     color: "#fff",
     alignSelf: "center",
     justifyContent: "center",
     borderRadius: 5,
+  },
+  trackViewImg: {
+    width: 50,
+    height: 50,
+    borderRadius: 15,
   },
 });
 

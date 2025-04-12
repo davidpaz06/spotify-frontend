@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from "react";
-import { StyleSheet, View, ActivityIndicator } from "react-native";
+import { StyleSheet, View, ActivityIndicator, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons"; // Importa los íconos
@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Onboarding from "./app/Onboarding";
 import Home from "./app/Home";
 import HomeBackup from "./app/HomeBackup";
+import Search from "./app/Search";
 
 const App: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -43,30 +44,60 @@ const App: FC = () => {
       <NavigationContainer>
         {isLoggedIn ? (
           <Tab.Navigator
+            initialRouteName="Home"
             screenOptions={({ route }) => ({
-              tabBarIcon: ({ color, size }) => {
-                let iconName: "home-outline" | "settings-outline" =
-                  "home-outline";
-
-                if (route.name === "Home") {
-                  iconName = "home-outline";
-                } else if (route.name === "HomeBackup") {
-                  iconName = "settings-outline";
-                }
-
-                return <Ionicons name={iconName} size={size} color={color} />;
-              },
-              tabBarActiveTintColor: "#1DB954", // Color del ícono activo
+              tabBarActiveTintColor: "#FFFFFF", // Color del ícono activo
               tabBarInactiveTintColor: "#909090", // Color del ícono inactivo
               tabBarStyle: {
                 backgroundColor: "#1A1A1A", // Color de fondo del tabBar
+                borderColor: "#1A1A1A", // Color del borde del tabBar
+                elevation: 10, // Sombra para Android
               },
             })}
           >
-            <Tab.Screen name="Home" options={{ headerShown: false }}>
+            <Tab.Screen
+              name="Search"
+              options={{
+                headerShown: false,
+                tabBarIcon: ({ color, size, focused }) => (
+                  <Ionicons
+                    name={focused ? "search" : "search-outline"}
+                    size={size}
+                    color={color}
+                  />
+                ),
+              }}
+            >
+              {() => <Search setIsLoggedIn={setIsLoggedIn} />}
+            </Tab.Screen>
+            <Tab.Screen
+              name="Home"
+              options={{
+                headerShown: false,
+                tabBarIcon: ({ color, size, focused }) => (
+                  <Ionicons
+                    name={focused ? "home" : "home-outline"}
+                    size={size}
+                    color={color}
+                  />
+                ),
+              }}
+            >
               {() => <Home setIsLoggedIn={setIsLoggedIn} />}
             </Tab.Screen>
-            <Tab.Screen name="HomeBackup" options={{ headerShown: false }}>
+            <Tab.Screen
+              name="My playlists"
+              options={{
+                headerShown: false,
+                tabBarIcon: ({ color, size, focused }) => (
+                  <Ionicons
+                    name={focused ? "library" : "library-outline"}
+                    size={size}
+                    color={color}
+                  />
+                ),
+              }}
+            >
               {() => <HomeBackup setIsLoggedIn={setIsLoggedIn} />}
             </Tab.Screen>
           </Tab.Navigator>
