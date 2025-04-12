@@ -2,7 +2,7 @@ import { FC, useState, useEffect } from "react";
 import { StyleSheet, View, ActivityIndicator, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons"; // Importa los íconos
+import { Ionicons } from "@expo/vector-icons";
 import { AuthProvider } from "./context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Onboarding from "./app/Onboarding";
@@ -116,7 +116,7 @@ const App: FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#1a1a1a",
     alignItems: "center",
     justifyContent: "center",
   },

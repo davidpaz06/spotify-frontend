@@ -2,7 +2,7 @@ import { StyleSheet, Text, Pressable } from "react-native";
 import { useAuth } from "../context/AuthContext";
 import { FC, useEffect, useState } from "react";
 import data from "../assets/data.json";
-import usePlayer from "../hooks/usePlayer"; // Importa el hook
+import usePlayer from "../hooks/usePlayer";
 
 import Background from "../components/Background";
 import StatusBar from "../components/StatusBar";

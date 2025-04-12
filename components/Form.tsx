@@ -12,7 +12,7 @@ import StatusBar from "./StatusBar";
 
 interface FormField {
   name: string;
-  label: string;
+  label?: string;
   placeholder: string;
   value?: string;
   secureTextEntry?: boolean;
@@ -64,7 +64,6 @@ const Form: FC<FormProps> = ({
 
   return (
     <>
-      <StatusBar backgroundColor="#1A1A1A" />
       <View style={styles.formContainer}>
         {fields.map((field) => (
           <View key={field.name} style={styles.fieldContainer}>
