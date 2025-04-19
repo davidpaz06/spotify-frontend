@@ -10,9 +10,10 @@ import {
 
 interface FilterProps {
   options: string[]; // Array de opciones
+  onSelect?: (option: string) => void; // Callback opcional para manejar la selección
 }
 
-const Filter: React.FC<FilterProps> = ({ options }) => {
+const Filter: React.FC<FilterProps> = ({ options, onSelect }) => {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
   const [fontsLoaded] = useFonts({
@@ -26,6 +27,9 @@ const Filter: React.FC<FilterProps> = ({ options }) => {
 
   const handleSelect = (option: string) => {
     setSelectedOption(option);
+    if (onSelect) {
+      onSelect(option);
+    }
   };
 
   return (

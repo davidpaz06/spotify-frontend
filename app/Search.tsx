@@ -1,8 +1,17 @@
-import { StyleSheet, Text, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  TextInput,
+  ScrollView,
+  Image,
+  FlatList,
+} from "react-native";
 import { useAuth } from "../context/AuthContext";
 import { FC, useEffect, useState } from "react";
-import data from "../assets/data.json";
-import usePlayer from "../hooks/usePlayer"; // Importa el hook
+import usePlayer from "../hooks/usePlayer";
+import axios from "axios";
 
 import Background from "../components/Background";
 import StatusBar from "../components/StatusBar";
@@ -13,26 +22,127 @@ import Title from "../components/Title";
 import LogoutButton from "../components/LogoutButton";
 import TrackView from "../components/TrackView";
 
-interface HomeProps {
+interface SearchProps {
   setIsLoggedIn: (isLoggedIn: boolean) => void;
 }
 
-const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
-  const { logout } = useAuth();
+const Search: FC<SearchProps> = ({ setIsLoggedIn }) => {
+  const { user } = useAuth();
   const { isPlaying, play, pause, stop } = usePlayer();
+  const [filter, setFilter] = useState<string>("track");
+  const [query, setQuery] = useState<string>("");
+  const [data, setData] = useState<any[]>([]);
+
+  const getData = async () => {
+    try {
+      const response = await axios.get("https://api.spotify.com/v1/search", {
+        params: {
+          q: query,
+          type: filter.toLowerCase(),
+        },
+        headers: {
+          Authorization: `Bearer ${user.spotifyAccessToken}`,
+        },
+      });
+      const data = (response.data as any)[filter.toLowerCase() + "s"].items.map(
+        (item: any) => {
+          if (filter === "Track") {
+            return {
+              id: item.id,
+              type: item.type,
+              name: item.name,
+              artist: item.artists[0].name,
+              album: item.album.name,
+              imageUrl: item.album.images[0].url,
+            };
+          } else if (filter === "Album") {
+            return {
+              id: item.id,
+              type: item.type,
+              release_date: item.release_date,
+              artist: item.artists[0].name,
+              album: item.name,
+              imageUrl: item.images[0].url,
+            };
+          } else if (filter === "Artist") {
+            return {
+              id: item.id,
+              artist: item.name,
+              genres: item.genres.join(", "),
+            };
+          }
+          return null;
+        }
+      );
+
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getData();
+    };
+    if (query) {
+      fetchData();
+    }
+  }, [filter]);
 
   return (
     <Background>
-      <StatusBar backgroundColor="#1A1A1A" />
-      <Header title="Home" backgroundColor="#1A1A1A" />
-      <Filter options={["Song", "Album", "Artist"]} />
+      <Header title="Search" backgroundColor="#1A1A1A" />
+      <Filter options={["Track", "Album", "Artist"]} onSelect={setFilter} />
+      <TextInput
+        style={styles.input}
+        placeholder="Search something"
+        onSubmitEditing={async (e) => {
+          console.log("Search query:", e.nativeEvent.text, filter);
+          const searchQuery = e.nativeEvent.text;
+          if (!searchQuery) {
+            setData([]);
+            return;
+          }
+          setQuery(searchQuery);
+          await getData();
 
-      <Title text="Recomendations" />
-      <ItemList data={data} viewType="one" />
+          data.map((item) => {
+            console.log(
+              `
+              Search data:
+                id: ${item.id}
+                Type: ${item.type}
+                Name: ${item.name}
+                Artist: ${item.artist}
+                Album: ${item.album}
+                Image: ${item.imageUrl}
+                `
+            );
+          });
+        }}
+      ></TextInput>
 
-      <LogoutButton onLogout={() => setIsLoggedIn(false)} />
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <Pressable style={styles.itemContainer}>
+            <Image
+              style={styles.itemImage}
+              source={{
+                uri: item.imageUrl || "https://via.placeholder.com/150",
+              }}
+            />
+            <View style={styles.textContainer}>
+              <Text style={styles.text}>{item.name}</Text>
+              <Text style={styles.text}>{item.artist}</Text>
+            </View>
+          </Pressable>
+        )}
+      ></FlatList>
 
-      <TrackView />
+      {/* <TrackView /> */}
     </Background>
   );
 };
@@ -42,10 +152,37 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#1A1A1A",
   },
+  input: {
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    padding: 10,
+    marginVertical: 10,
+    marginHorizontal: 20,
+    fontSize: 16,
+  },
+
+  itemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+  },
+  itemImage: {
+    width: 55,
+    height: 55,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  textContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "flex-start",
+    paddingLeft: 10,
+  },
   text: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: 16,
   },
+
   button: {
     padding: 10,
     backgroundColor: "#1DB954",
@@ -60,4 +197,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default Search;
