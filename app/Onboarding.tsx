@@ -30,7 +30,7 @@ const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
       }
       onComplete();
     } catch (error) {
-      console.error("Onboarding - Registration error:", error);
+      // console.error("Onboarding - Registration error:", error);
     }
   };
 

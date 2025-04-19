@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import ItemView from "./ItemView";
 
@@ -7,9 +7,9 @@ interface ItemListProps {
     track: string;
     url: string;
     artist: string;
-  }[]; // Array de objetos
-  viewType: "one" | "two" | "three"; // Tipo de vista
-  limit?: number; // Límite de elementos a mostrar (opcional)
+  }[];
+  viewType: "one" | "two" | "three";
+  limit?: number;
 }
 
 const ItemList: React.FC<ItemListProps> = ({ data, viewType, limit }) => {
@@ -30,7 +30,6 @@ const ItemList: React.FC<ItemListProps> = ({ data, viewType, limit }) => {
   );
 };
 
-// Función para capitalizar la primera letra de un string
 const capitalize = (str: string) =>
   str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 
@@ -39,6 +38,8 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
     paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: "red",
   },
 
   // Estilo para la vista "one"
@@ -46,13 +47,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+    rowGap: 25,
+    paddingHorizontal: 35,
   },
 
   // Estilo para la vista "two"
   containerTwo: {
     rowGap: 15,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
+
     flexWrap: "wrap",
   },
 

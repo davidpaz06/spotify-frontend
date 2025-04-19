@@ -1,5 +1,11 @@
 import { FC, useState, useEffect } from "react";
-import { StyleSheet, View, ActivityIndicator, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  Text,
+  StatusBar,
+} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
@@ -41,17 +47,18 @@ const App: FC = () => {
 
   return (
     <AuthProvider>
+      <StatusBar barStyle="light-content" backgroundColor="#1a1a1a" />
       <NavigationContainer>
         {isLoggedIn ? (
           <Tab.Navigator
             initialRouteName="Home"
             screenOptions={({ route }) => ({
-              tabBarActiveTintColor: "#FFFFFF", // Color del ícono activo
-              tabBarInactiveTintColor: "#909090", // Color del ícono inactivo
+              tabBarActiveTintColor: "#FFFFFF",
+              tabBarInactiveTintColor: "#909090",
               tabBarStyle: {
-                backgroundColor: "#1A1A1A", // Color de fondo del tabBar
-                borderColor: "#1A1A1A", // Color del borde del tabBar
-                elevation: 10, // Sombra para Android
+                backgroundColor: "#1A1A1A",
+                borderColor: "#1A1A1A",
+                elevation: 10,
               },
             })}
           >

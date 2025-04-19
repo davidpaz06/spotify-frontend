@@ -13,7 +13,7 @@ interface ItemViewProps {
 
 const ItemView: React.FC<ItemViewProps> = ({ data, viewType = "one" }) => {
   const { track = "Unknown Track", url = "", artist = "Unknown Artist" } = data;
-  const [isLoading, setIsLoading] = useState(true); // Estado para manejar el loader
+  const [isLoading, setIsLoading] = useState(true);
 
   const [fontsLoaded] = useFonts({
     FigtreeRegular: require("../assets/fonts/Figtree-Regular.ttf"),
@@ -77,14 +77,15 @@ const ItemView: React.FC<ItemViewProps> = ({ data, viewType = "one" }) => {
   );
 };
 
-// Función para capitalizar la primera letra de un string
 const capitalize = (str: string) =>
   str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
 
 const styles = StyleSheet.create({
   // ---------------- One ------------------
   containerOne: {
-    width: 110,
+    width: 120,
+    borderWidth: 1,
+    borderColor: "transparent",
     borderRadius: 5,
     overflow: "hidden",
   },
