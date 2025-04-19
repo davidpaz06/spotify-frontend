@@ -1,32 +1,37 @@
 import { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import ItemView from "./ItemView";
+import { Pressable } from "react-native";
 
 interface ItemListProps {
   data: {
-    track: string;
-    url: string;
+    id: string;
+    release_date: string;
+    type: string;
+    album: string;
     artist: string;
+    imageUrl: string;
   }[];
   viewType: "one" | "two" | "three";
   limit?: number;
 }
 
 const ItemList: React.FC<ItemListProps> = ({ data, viewType, limit }) => {
-  // Limitar los datos si se proporciona un límite
   const limitedData = limit ? data.slice(0, limit) : data;
 
   return (
-    <View
-      style={[
-        styles.container,
-        styles[`container${capitalize(viewType)}` as keyof typeof styles],
-      ]}
-    >
-      {limitedData.map((item, index) => (
-        <ItemView key={index} data={item} viewType={viewType} />
-      ))}
-    </View>
+    <Pressable onPress={() => console.log("Pressed")}>
+      <View
+        style={[
+          styles.container,
+          styles[`container${capitalize(viewType)}` as keyof typeof styles],
+        ]}
+      >
+        {limitedData.map((item, index) => (
+          <ItemView key={index} data={item} viewType={viewType} />
+        ))}
+      </View>
+    </Pressable>
   );
 };
 
@@ -38,8 +43,6 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
     paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: "red",
   },
 
   // Estilo para la vista "one"

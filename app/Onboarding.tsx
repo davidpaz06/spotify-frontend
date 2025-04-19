@@ -1,4 +1,10 @@
-import { StyleSheet, Text, Pressable, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  Pressable,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { FC, useState } from "react";
 import { useAuth } from "../context/AuthContext";
@@ -19,8 +25,10 @@ const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
   const [formData, setFormData] = useState<{ [key: string]: string } | null>(
     null
   );
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFormSubmit = async (formData: { [key: string]: string }) => {
+    setIsLoading(true);
     console.log("Form Data:", formData);
     try {
       if (isRegistering[0]) {
@@ -30,7 +38,8 @@ const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
       }
       onComplete();
     } catch (error) {
-      // console.error("Onboarding - Registration error:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -49,6 +58,14 @@ const Onboarding: FC<OnboardingProps> = ({ onComplete }) => {
       required: true,
     },
   ];
+
+  if (isLoading) {
+    return (
+      <Background>
+        <ActivityIndicator style={styles.loader} size="large" color="#FFF" />
+      </Background>
+    );
+  }
 
   return (
     <KeyboardAwareScrollView
@@ -100,6 +117,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#1A1A1A",
     padding: 20,
+  },
+
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    marginTop: 50,
   },
 
   formContainer: {

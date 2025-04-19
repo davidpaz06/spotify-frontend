@@ -4,15 +4,22 @@ import { useFonts } from "expo-font";
 
 interface ItemViewProps {
   data: {
-    track: string;
-    url: string;
+    id: string;
+    release_date: string;
+    type: string;
+    album: string;
     artist: string;
+    imageUrl: string;
   };
   viewType?: "one" | "two" | "three";
 }
 
 const ItemView: React.FC<ItemViewProps> = ({ data, viewType = "one" }) => {
-  const { track = "Unknown Track", url = "", artist = "Unknown Artist" } = data;
+  const {
+    album = "Unknown Album",
+    imageUrl = "",
+    artist = "Unknown Artist",
+  } = data;
   const [isLoading, setIsLoading] = useState(true);
 
   const [fontsLoaded] = useFonts({
@@ -45,7 +52,7 @@ const ItemView: React.FC<ItemViewProps> = ({ data, viewType = "one" }) => {
           <ActivityIndicator style={styles.loader} size="small" color="#FFF" />
         )}
         <Image
-          source={{ uri: url || "https://via.placeholder.com/150" }}
+          source={{ uri: imageUrl || "https://via.placeholder.com/150" }}
           style={[imageStyle, { opacity: isLoading ? 0 : 1 }]} // Usa opacity en lugar de display
           onLoadEnd={() => setIsLoading(false)} // Cambia el estado cuando la imagen termina de cargarse
         />
@@ -53,7 +60,7 @@ const ItemView: React.FC<ItemViewProps> = ({ data, viewType = "one" }) => {
       {viewType === "three" ? (
         <View style={styles.wrapperThree}>
           <Text style={trackStyle} numberOfLines={1} ellipsizeMode="tail">
-            {track}
+            {album}
           </Text>
           <Text style={artistStyle} numberOfLines={1} ellipsizeMode="tail">
             {artist}
@@ -66,7 +73,7 @@ const ItemView: React.FC<ItemViewProps> = ({ data, viewType = "one" }) => {
             numberOfLines={viewType === "two" ? 2 : 1}
             ellipsizeMode="tail"
           >
-            {track}
+            {album}
           </Text>
           <Text style={artistStyle} numberOfLines={1} ellipsizeMode="tail">
             {artist}
