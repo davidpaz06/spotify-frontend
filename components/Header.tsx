@@ -11,12 +11,12 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ backgroundColor, title }) => {
-  const [avatar, setAvatar] = useState<string | null>(null);
-  const navigation = useNavigation();
-
   const [fontsLoaded] = useFonts({
     FigtreeBold: require("../assets/fonts/Figtree-Bold.ttf"),
   });
+  const [avatar, setAvatar] = useState<string | null>(null);
+  const navigation = useNavigation();
+
   if (!fontsLoaded) {
     return null;
   }
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 90,
     paddingHorizontal: 20,
-    backgroundColor: "#1A1A1A", // Color por defecto
+    backgroundColor: "#1A1A1A",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
