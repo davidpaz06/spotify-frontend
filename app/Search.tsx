@@ -136,8 +136,14 @@ const Search: FC<SearchProps> = ({ setIsLoggedIn }) => {
             />
             <View style={styles.textContainer}>
               <Text style={styles.text}>{item.name}</Text>
-              <Text style={styles.text}>{item.artist}</Text>
+              <Text style={styles.textSecondary}>{item.artist}</Text>
             </View>
+
+            <Pressable onPress={() => console.log("Options pressed")}>
+              <View style={styles.button}>
+                <Text style={{ color: "#ccc", fontSize: 20 }}>+</Text>
+              </View>
+            </Pressable>
           </Pressable>
         )}
       ></FlatList>
@@ -167,10 +173,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   itemImage: {
-    width: 55,
-    height: 55,
+    width: 65,
+    height: 65,
     borderRadius: 5,
-    marginRight: 10,
   },
   textContainer: {
     flex: 1,
@@ -182,13 +187,19 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
   },
+  textSecondary: {
+    color: "#aaa",
+    fontSize: 14,
+  },
 
   button: {
-    padding: 10,
-    backgroundColor: "#1DB954",
-    borderRadius: 5,
-    alignSelf: "center",
-    marginVertical: 5,
+    backgroundColor: "#aaa",
+    borderRadius: 50,
+    width: 30,
+    height: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 10,
   },
   buttonText: {
     fontSize: 16,

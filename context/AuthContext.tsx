@@ -63,6 +63,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     await AsyncStorage.removeItem("username");
   };
 
+  useEffect(() => {
+    const loadUserFromStorage = async () => {
+      try {
+        const storedUser = await AsyncStorage.getItem("user");
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+      } catch (error) {
+        console.error("Error loading user:", error);
+      }
+    };
+
+    loadUserFromStorage();
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{ user, handleRegister, handleLogin, logout, setUser }}

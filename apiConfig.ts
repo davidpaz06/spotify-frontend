@@ -17,7 +17,8 @@ const API_ROUTES = {
   //----------------------------- DELETE -----------------------------//
 
   //USER
-  DELETE_USER: `${BASE_URL}/users/delete`, //ELIMINAR USUARIO
+  DELETE_USER: `${BASE_URL}/user`,
+  DELETE_USER_DEV: `${BASE_URL_DEV}/user`,
 };
 
 export { BASE_URL, API_ROUTES };

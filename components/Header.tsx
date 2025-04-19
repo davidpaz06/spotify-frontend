@@ -1,5 +1,7 @@
-import React from "react";
-import { View, StyleSheet, Text, Image } from "react-native";
+import { useEffect, useState } from "react";
+import { View, StyleSheet, Text, Image, Pressable } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 
 interface HeaderProps {
@@ -9,7 +11,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ backgroundColor, title }) => {
-  const user_img = require("../assets/images/icon.png");
+  const [avatar, setAvatar] = useState<string | null>(null);
+  const navigation = useNavigation();
 
   const [fontsLoaded] = useFonts({
     FigtreeBold: require("../assets/fonts/Figtree-Bold.ttf"),
@@ -17,6 +20,21 @@ const Header: React.FC<HeaderProps> = ({ backgroundColor, title }) => {
   if (!fontsLoaded) {
     return null;
   }
+
+  const getAvatar = async () => {
+    try {
+      const storedAvatar = await AsyncStorage.getItem("avatar");
+      if (storedAvatar) {
+        setAvatar(storedAvatar);
+      }
+    } catch (error) {
+      console.error("Error loading avatar from AsyncStorage:", error);
+    }
+  };
+
+  useEffect(() => {
+    getAvatar();
+  }, []);
 
   return (
     <View
@@ -26,12 +44,16 @@ const Header: React.FC<HeaderProps> = ({ backgroundColor, title }) => {
       ]}
     >
       <Text style={styles.title}>{title || "Header"}</Text>
-      <Image
-        source={{
-          uri: "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/account-white-icon.png",
-        }}
-        style={styles.image}
-      />
+      <Pressable onPress={() => navigation.navigate("Profile")}>
+        <Image
+          source={{
+            uri:
+              avatar ||
+              "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/account-white-icon.png",
+          }}
+          style={styles.image}
+        />
+      </Pressable>
     </View>
   );
 };
