@@ -96,7 +96,7 @@ const Profile: FC<ProfileProps> = ({ setIsLoggedIn }) => {
         username: username,
       };
 
-      await axios.delete(API_ROUTES.DELETE_USER_DEV, {
+      await axios.delete(API_ROUTES.DELETE_USER, {
         headers: {
           Authorization: `Bearer ${user.accessToken}`,
         },
