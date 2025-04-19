@@ -124,10 +124,6 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
         <ItemList data={newReleases} viewType="two" />
         <Title text="Recent" />
         <ItemList data={newReleases} viewType="three" limit={2} />
-
-        <LogoutButton onLogout={() => setIsLoggedIn(false)} />
-
-        {/* <TrackView /> */}
       </ScrollView>
     </Background>
   );

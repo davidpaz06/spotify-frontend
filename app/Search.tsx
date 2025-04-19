@@ -29,11 +29,11 @@ interface SearchProps {
 const Search: FC<SearchProps> = ({ setIsLoggedIn }) => {
   const { user } = useAuth();
   const { isPlaying, play, pause, stop } = usePlayer();
-  const [filter, setFilter] = useState<string>("track");
+  const [filter, setFilter] = useState<string>("Track");
   const [query, setQuery] = useState<string>("");
   const [data, setData] = useState<any[]>([]);
 
-  const getData = async () => {
+  const getData = async (query: string) => {
     try {
       const response = await axios.get("https://api.spotify.com/v1/search", {
         params: {
@@ -50,7 +50,7 @@ const Search: FC<SearchProps> = ({ setIsLoggedIn }) => {
             return {
               id: item.id,
               type: item.type,
-              name: item.name,
+              track: item.name,
               artist: item.artists[0].name,
               album: item.album.name,
               imageUrl: item.album.images[0].url,
@@ -67,8 +67,10 @@ const Search: FC<SearchProps> = ({ setIsLoggedIn }) => {
           } else if (filter === "Artist") {
             return {
               id: item.id,
+              type: item.type,
               artist: item.name,
               genres: item.genres.join(", "),
+              imageUrl: item.images[0]?.url,
             };
           }
           return null;
@@ -83,7 +85,7 @@ const Search: FC<SearchProps> = ({ setIsLoggedIn }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await getData();
+      await getData(query);
     };
     if (query) {
       fetchData();
@@ -105,7 +107,7 @@ const Search: FC<SearchProps> = ({ setIsLoggedIn }) => {
             return;
           }
           setQuery(searchQuery);
-          await getData();
+          await getData(searchQuery);
 
           data.map((item) => {
             console.log(
@@ -113,7 +115,7 @@ const Search: FC<SearchProps> = ({ setIsLoggedIn }) => {
               Search data:
                 id: ${item.id}
                 Type: ${item.type}
-                Name: ${item.name}
+                Name: ${item.track || item.album}
                 Artist: ${item.artist}
                 Album: ${item.album}
                 Image: ${item.imageUrl}
@@ -121,7 +123,7 @@ const Search: FC<SearchProps> = ({ setIsLoggedIn }) => {
             );
           });
         }}
-      ></TextInput>
+      />
 
       <FlatList
         data={data}
@@ -135,15 +137,19 @@ const Search: FC<SearchProps> = ({ setIsLoggedIn }) => {
               }}
             />
             <View style={styles.textContainer}>
-              <Text style={styles.text}>{item.name}</Text>
-              <Text style={styles.textSecondary}>{item.artist}</Text>
+              <Text style={styles.text}>{item[filter.toLowerCase()]}</Text>
+              {item.type !== "artist" && (
+                <Text style={styles.textSecondary}>{item.artist}</Text>
+              )}
             </View>
 
-            <Pressable onPress={() => console.log("Options pressed")}>
-              <View style={styles.button}>
-                <Text style={{ color: "#ccc", fontSize: 20 }}>+</Text>
-              </View>
-            </Pressable>
+            {item.type === "track" && (
+              <Pressable onPress={() => console.log("Options pressed")}>
+                <View style={styles.button}>
+                  <Text style={{ color: "#ccc", fontSize: 20 }}>+</Text>
+                </View>
+              </Pressable>
+            )}
           </Pressable>
         )}
       ></FlatList>
