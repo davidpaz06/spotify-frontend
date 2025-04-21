@@ -5,12 +5,14 @@ import { useAuth } from "../context/AuthContext";
 import { Audio } from "expo-av";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import Background from "../components/Background";
+import Header from "../components/Header";
 
-interface HomeProps {
+interface LibraryProps {
   setIsLoggedIn: (isLoggedIn: boolean) => void;
 }
 
-const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
+const Library: FC<LibraryProps> = ({ setIsLoggedIn }) => {
   const { user, logout, setUser } = useAuth();
   const [username, setUsername] = useState<string | null>(null);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
@@ -69,7 +71,8 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
   }, []);
 
   return (
-    <>
+    <Background>
+      <Header title="Library"></Header>
       <Text style={styles.title}>
         Welcome, {username ? username : "Guest"}!
       </Text>
@@ -141,7 +144,7 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
       >
         <Text style={styles.buttonText}>Get song</Text>
       </Pressable>
-    </>
+    </Background>
   );
 };
 
@@ -177,4 +180,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default Library;

@@ -14,7 +14,7 @@ import { AuthProvider } from "./context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Onboarding from "./app/Onboarding";
 import Home from "./app/Home";
-import HomeBackup from "./app/HomeBackup";
+import Library from "./app/Library";
 import Search from "./app/Search";
 import Profile from "./app/Profile";
 
@@ -25,7 +25,7 @@ const HomeStackScreen: FC<{ setIsLoggedIn: (value: boolean) => void }> = ({
   setIsLoggedIn,
 }) => (
   <HomeStack.Navigator screenOptions={{ headerShown: false }}>
-    <HomeStack.Screen name="Home">
+    <HomeStack.Screen name="HomeMain">
       {() => <Home setIsLoggedIn={setIsLoggedIn} />}
     </HomeStack.Screen>
     <HomeStack.Screen name="Profile">
@@ -38,7 +38,7 @@ const SearchStackScreen: FC<{ setIsLoggedIn: (value: boolean) => void }> = ({
   setIsLoggedIn,
 }) => (
   <SearchStack.Navigator screenOptions={{ headerShown: false }}>
-    <SearchStack.Screen name="Search">
+    <SearchStack.Screen name="SearchMain">
       {() => <Search setIsLoggedIn={setIsLoggedIn} />}
     </SearchStack.Screen>
     <HomeStack.Screen name="Profile">
@@ -124,7 +124,7 @@ const App: FC = () => {
               {() => <HomeStackScreen setIsLoggedIn={setIsLoggedIn} />}
             </Tab.Screen>
             <Tab.Screen
-              name="My playlists"
+              name="Library"
               options={{
                 headerShown: false,
                 tabBarIcon: ({ color, size, focused }) => (
@@ -136,7 +136,7 @@ const App: FC = () => {
                 ),
               }}
             >
-              {() => <HomeBackup setIsLoggedIn={setIsLoggedIn} />}
+              {() => <Library setIsLoggedIn={setIsLoggedIn} />}
             </Tab.Screen>
           </Tab.Navigator>
         ) : (

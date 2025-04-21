@@ -9,7 +9,7 @@ import {
 import { useAuth } from "../context/AuthContext";
 import { FC, useEffect, useState } from "react";
 import axios from "axios";
-import data from "../assets/data.json";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import usePlayer from "../hooks/usePlayer";
 
 import Background from "../components/Background";
@@ -26,6 +26,7 @@ interface HomeProps {
 
 const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
   const { user } = useAuth();
+  const [username, setUsername] = useState<string>("Guest");
   const { isPlaying, play, pause, stop } = usePlayer();
   const [newReleases, setNewReleases] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -93,6 +94,19 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
     if (!user) {
       return;
     }
+
+    const fetchUsername = async () => {
+      try {
+        const storedUsername = await AsyncStorage.getItem("username");
+        if (storedUsername) {
+          setUsername(storedUsername);
+        }
+      } catch (error) {
+        console.error("Error loading username from AsyncStorage:", error);
+      }
+    };
+
+    fetchUsername();
     fetchData();
   }, [user]);
 
@@ -117,7 +131,7 @@ const Home: FC<HomeProps> = ({ setIsLoggedIn }) => {
         }
       >
         <Header title="Home" backgroundColor="#1A1A1A" />
-
+        <Text style={styles.greet}>Welcome, {username}</Text>
         <Title text="Albums" />
         <ItemList data={newReleases} viewType="one" limit={6} />
         <Title text="Playlists" />
@@ -139,6 +153,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     marginTop: 50,
+  },
+
+  greet: {
+    color: "#fff",
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 10,
+    marginLeft: 20,
   },
   text: {
     color: "#fff",

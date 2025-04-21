@@ -85,7 +85,6 @@ const Profile: FC<ProfileProps> = ({ setIsLoggedIn }) => {
     setIsLoggedIn(false);
   };
 
-  // Función que se ejecuta al confirmar la eliminación de usuario
   const confirmDelete = async () => {
     try {
       await AsyncStorage.removeItem("user");
